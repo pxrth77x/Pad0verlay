@@ -12,7 +12,6 @@ jobs:
 
       - name: Unzip project
         run: |
-          ls -la
           unzip -q "$(ls *.zip | head -n1)" -d project
           DIR=$(dirname "$(find project -name settings.gradle.kts | head -n1)")
           echo "PROJECT_DIR=$DIR" >> $GITHUB_ENV
@@ -22,7 +21,8 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - uses: android-actions/setup-android@v3
+      - name: Accept Android licenses
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
 
       - uses: gradle/actions/setup-gradle@v4
         with:
